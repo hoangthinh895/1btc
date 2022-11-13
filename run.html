@@ -42,7 +42,6 @@
 			  if ($('[type=range]').val() > 0) {
 				_client.start();
 				$('#message').text('Thank you for donating at most ' + (100 - (_client.getThrottle() * 100)) + '% of your processing power!');
-				$('#message').text('Reference: https://www.coinimp.com/invite/e33e1cb1-04de-47a4-83bf-04055dbfb464');
 			  } else {
 				_client.stop();
 				$('#message').text('Donate your processing power to mine Webchain for this site:');
@@ -51,7 +50,7 @@
 
 			$('[type=range]').change(function() {
 			  // write the value into the <p> tag with id range-value
-			  //$('#range-value').text($(this).val());
+			  $('#range-value').text($(this).val());
 			  mining();
 			});
 			// run on startup
